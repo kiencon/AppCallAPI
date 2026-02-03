@@ -1,7 +1,7 @@
 ﻿using Contracts;
 using Infrastructure;
 using Microsoft.Extensions.Logging;
-using Observability;
+//using Observability;
 
 namespace Services;
 
@@ -17,8 +17,8 @@ public interface ILeaveService
 public sealed class LeaveService : ILeaveService
 {
     private readonly ILogger<LeaveService> _logger;
-    private readonly ICorrelationContext _corr;
-    private readonly IAuditLogger _audit;
+    //private readonly ICorrelationContext _corr;
+    //private readonly IAuditLogger _audit;
     private readonly ILeaveRepository _repo;
     private readonly IPdfGenerator _pdf;
 
@@ -31,14 +31,14 @@ public sealed class LeaveService : ILeaveService
 
     public LeaveService(
         ILogger<LeaveService> logger,
-        ICorrelationContext corr,
-        IAuditLogger audit,
+        //ICorrelationContext corr,
+        //IAuditLogger audit,
         ILeaveRepository repo,
         IPdfGenerator pdf)
     {
         _logger = logger;
-        _corr = corr;
-        _audit = audit;
+        // _corr = corr;
+        // _audit = audit;
         _repo = repo;
         _pdf = pdf;
     }
@@ -61,17 +61,17 @@ public sealed class LeaveService : ILeaveService
 
         await _repo.CreateAsync(req, ct);
 
-        _audit.Write("LeaveRequestSubmitted", new
-        {
-            req.Id,
-            req.UserId,
-            req.Language,
-            cmd.ClientVersion
-        });
+        // _audit.Write("LeaveRequestSubmitted", new
+        // {
+        //     req.Id,
+        //     req.UserId,
+        //     req.Language,
+        //     cmd.ClientVersion
+        // });
 
         _logger.LogInformation("SubmitLeaveRequest done requestId={requestId}", req.Id);
 
-        return new SubmitLeaveRequestResult(req.Id, _corr.CorrelationId);
+        return new SubmitLeaveRequestResult(req.Id);
     }
 
     public async Task<PrintLeavePdfResult> PrintPdfAsync(PrintLeavePdfCommand cmd, CancellationToken ct)
@@ -84,7 +84,7 @@ public sealed class LeaveService : ILeaveService
         var req = await _repo.GetAsync(cmd.RequestId, ct);
         if (req is null)
         {
-            _audit.Write("LeavePdfPrintFailed_NotFound", new { cmd.RequestId, cmd.UserId, cmd.ClientVersion });
+            //_audit.Write("LeavePdfPrintFailed_NotFound", new { cmd.RequestId, cmd.UserId, cmd.ClientVersion });
             throw new InvalidOperationException($"Leave request not found: {cmd.RequestId}");
         }
 
@@ -98,18 +98,18 @@ public sealed class LeaveService : ILeaveService
 
         var pdfPath = await _pdf.GenerateLeavePdfAsync(req.Id, pdfLang, ct);
 
-        _audit.Write("LeavePdfPrinted", new
-        {
-            req.Id,
-            req.UserId,
-            RequestLanguage = req.Language,
-            PdfLanguage = pdfLang,
-            pdfPath,
-            cmd.ClientVersion
-        });
+        // _audit.Write("LeavePdfPrinted", new
+        // {
+        //     req.Id,
+        //     req.UserId,
+        //     RequestLanguage = req.Language,
+        //     PdfLanguage = pdfLang,
+        //     pdfPath,
+        //     cmd.ClientVersion
+        // });
 
         _logger.LogInformation("PrintLeavePdf done pdfPath={pdfPath}", pdfPath);
 
-        return new PrintLeavePdfResult(req.Id, req.Language, pdfLang, pdfPath, _corr.CorrelationId);
+        return new PrintLeavePdfResult(req.Id, req.Language, pdfLang, pdfPath);
     }
 }

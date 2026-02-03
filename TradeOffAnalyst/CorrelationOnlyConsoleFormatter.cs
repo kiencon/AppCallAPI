@@ -13,6 +13,7 @@ public sealed class CorrelationOnlyConsoleFormatter : ConsoleFormatter
     {
         var timestamp = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
         string correlationId = "-";
+        string traceId = "-";
 
         scopeProvider?.ForEachScope<object>((scope, _) =>
         {
@@ -22,11 +23,13 @@ public sealed class CorrelationOnlyConsoleFormatter : ConsoleFormatter
                 {
                     if (kv.Key == "CorrelationId")
                         correlationId = kv.Value?.ToString() ?? "-";
+                    if (kv.Key == "TraceId")
+                        traceId = kv.Value?.ToString() ?? "-";
                 }
             }
         }, state: null);
 
-        textWriter.Write($"{timestamp} correlationId {correlationId} :");
+        textWriter.Write($"{timestamp} correlationId {correlationId} traceId {traceId} : ");
         
         textWriter.WriteLine(logEntry.Formatter(logEntry.State, logEntry.Exception));
 

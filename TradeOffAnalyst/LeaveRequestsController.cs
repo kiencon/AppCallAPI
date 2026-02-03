@@ -1,6 +1,6 @@
 ﻿using Contracts;
 using Microsoft.AspNetCore.Mvc;
-using Observability;
+//using Observability;
 using Services;
 
 namespace TradeOffAnalyst;
@@ -10,23 +10,23 @@ namespace TradeOffAnalyst;
 public sealed class LeaveRequestsController : ControllerBase
 {
     private readonly ILogger<LeaveRequestsController> _logger;
-    private readonly ICorrelationContext _corr;
+    //private readonly ICorrelationContext _corr;
     private readonly ILeaveService _svc;
 
     public LeaveRequestsController(
         ILogger<LeaveRequestsController> logger,
-        ICorrelationContext corr,
+        //ICorrelationContext corr,
         ILeaveService svc)
     {
         _logger = logger;
-        _corr = corr;
+        //_corr = corr;
         _svc = svc;
     }
 
     [HttpPost]
     public async Task<ActionResult<SubmitLeaveRequestResult>> Submit([FromBody] SubmitLeaveRequestCommand cmd, CancellationToken ct)
     {
-        _logger.LogInformation("HTTP Submit correlationId={correlationId}", _corr.CorrelationId);
+        //_logger.LogInformation("HTTP Submit correlationId={correlationId}", _corr.CorrelationId);
         return Ok(await _svc.SubmitAsync(cmd, ct));
     }
 
@@ -36,7 +36,7 @@ public sealed class LeaveRequestsController : ControllerBase
         // Ensure route id is used
         var cmd = body with { RequestId = id };
 
-        _logger.LogInformation("HTTP Print correlationId={correlationId}", _corr.CorrelationId);
+        //_logger.LogInformation("HTTP Print correlationId={correlationId}", _corr.CorrelationId);
         return Ok(await _svc.PrintPdfAsync(cmd, ct));
     }
 }

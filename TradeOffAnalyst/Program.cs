@@ -1,6 +1,5 @@
 using Infrastructure;
 using Microsoft.Extensions.Logging.Console;
-using Observability;
 using Services;
 using TradeOffAnalyst;
 
@@ -14,8 +13,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Observability
-builder.Services.AddSingleton<ICorrelationContext, CorrelationContext>();
-builder.Services.AddSingleton<IAuditLogger, ConsoleAuditLogger>();
+//builder.Services.AddSingleton<ICorrelationContext, CorrelationContext>();
+//builder.Services.AddSingleton<IAuditLogger, ConsoleAuditLogger>();
 
 // Infrastructure
 builder.Services.AddSingleton<ILeaveRepository, InMemoryLeaveRepository>();
@@ -39,7 +38,7 @@ builder.Services.AddSingleton<ConsoleFormatter, CorrelationOnlyConsoleFormatter>
 builder.Logging.AddConsole(o =>
 {
     o.FormatterName = "corr";
-    o.IncludeScopes = true;
+    o.IncludeScopes = false;
 });
 
 var app = builder.Build();

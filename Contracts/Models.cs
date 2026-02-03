@@ -15,8 +15,8 @@ public sealed record SubmitLeaveRequestCommand(
 );
 
 public sealed record SubmitLeaveRequestResult(
-    Guid RequestId,
-    string CorrelationId
+    Guid RequestId
+    //string CorrelationId
 );
 
 public sealed record PrintLeavePdfCommand(
@@ -29,6 +29,6 @@ public sealed record PrintLeavePdfResult(
     Guid RequestId,
     Lang RequestLanguage,
     Lang PdfLanguage,
-    string PdfPath,
-    string CorrelationId
+    string PdfPath
+    //string CorrelationId
 );

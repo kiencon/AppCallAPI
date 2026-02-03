@@ -45,7 +45,7 @@ public sealed class LeaveService : ILeaveService
 
     public async Task<SubmitLeaveRequestResult> SubmitAsync(SubmitLeaveRequestCommand cmd, CancellationToken ct)
     {
-        using var _ = _logger.BeginCorrelationScope(_corr.CorrelationId);
+        //using var _ = _logger.BeginCorrelationScope(_corr.CorrelationId);
 
         _logger.LogInformation("SubmitLeaveRequest start userId={userId} lang={lang} clientVersion={clientVersion}",
             cmd.UserId, cmd.Language, cmd.ClientVersion);
@@ -76,7 +76,7 @@ public sealed class LeaveService : ILeaveService
 
     public async Task<PrintLeavePdfResult> PrintPdfAsync(PrintLeavePdfCommand cmd, CancellationToken ct)
     {
-        using var _ = _logger.BeginCorrelationScope(_corr.CorrelationId);
+        //using var _ = _logger.BeginCorrelationScope(_corr.CorrelationId);
 
         _logger.LogInformation("PrintLeavePdf start requestId={requestId} userId={userId} clientVersion={clientVersion}",
             cmd.RequestId, cmd.UserId, cmd.ClientVersion);

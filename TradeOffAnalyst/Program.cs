@@ -1,4 +1,5 @@
 using Infrastructure;
+using Microsoft.Extensions.Logging.Console;
 using Observability;
 using Services;
 using TradeOffAnalyst;
@@ -24,11 +25,21 @@ builder.Services.AddSingleton<IPdfGenerator, FakePdfGenerator>();
 builder.Services.AddSingleton<ILeaveService, LeaveService>();
 
 // Built-in logging
+// builder.Logging.ClearProviders();
+// builder.Logging.AddSimpleConsole(options =>
+// {
+//     options.TimestampFormat = "yyyy-MM-dd HH:mm:ss.fff ";
+//     options.IncludeScopes = false;
+// });
+
 builder.Logging.ClearProviders();
-builder.Logging.AddSimpleConsole(options =>
+
+builder.Services.AddSingleton<ConsoleFormatter, CorrelationOnlyConsoleFormatter>();
+
+builder.Logging.AddConsole(o =>
 {
-    options.TimestampFormat = "yyyy-MM-dd HH:mm:ss.fff ";
-    options.IncludeScopes = true;
+    o.FormatterName = "corr";
+    o.IncludeScopes = true;
 });
 
 var app = builder.Build();
